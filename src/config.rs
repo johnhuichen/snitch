@@ -1,13 +1,14 @@
 use confy;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::error::Error;
 
 static APP_NAME: &str = "snitch";
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Config {
-    tcp_targets: Vec<String>,
-    proc_targets: Vec<String>,
+    tcp_targets: HashMap<String, String>,
+    proc_targets: HashMap<String, String>,
 }
 
 impl Config {
@@ -18,7 +19,7 @@ impl Config {
         Ok(cfg)
     }
 
-    pub fn get_tcp_targets(&self) -> Vec<String> {
-        self.tcp_targets
+    pub fn get_tcp_targets(&self) -> HashMap<String, String> {
+        self.tcp_targets.clone()
     }
 }

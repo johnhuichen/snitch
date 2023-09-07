@@ -1,35 +1,40 @@
 use super::Spy;
-use crate::config::Config;
-use crate::snitcher::Snitcher;
 use dns_lookup;
-use procfs;
-use std::{net::IpAddr, thread, time::Duration};
+use std::collections::HashMap;
+use std::net::IpAddr;
 
-struct TCPSpy {
-    tcp_targets: Vec<String>,
+pub struct TCPSpy {
+    host_map: HashMap<String, String>,
+    tcp_targets: HashMap<String, String>,
+}
+
+impl TCPSpy {
+    pub fn new(tcp_targets: HashMap<String, String>) -> Self {
+        TCPSpy {
+            host_map: HashMap::new(),
+            tcp_targets,
+        }
+    }
+
+    pub fn get_host(&mut self, ip: String) -> &str {
+        self.host_map.entry(ip.to_string()).or_insert_with(|| {
+            let ip_addr: IpAddr = ip.parse().unwrap();
+            dns_lookup::lookup_addr(&ip_addr).unwrap_or_default()
+        })
+    }
 }
 
 impl Spy for TCPSpy {
-    fn new(config: &Config) -> Self {
-        TCPSpy {
-            tcp_targets: config.get_tcp_targets(),
-        }
-    }
-    fn spy_for(&self, snitcher: &impl Snitcher) {
+    fn get_message(&mut self) -> Option<String> {
         let tcp_targets = self.tcp_targets.clone();
-        let sender = snitcher.get_sender();
-        let thread = thread::spawn(move || {
-            for entry in procfs::net::tcp().unwrap().iter() {
-                let ip = entry.remote_address.ip().to_string();
-                let ip: IpAddr = ip.parse().unwrap();
-
-                let host = dns_lookup::lookup_addr(&ip).unwrap_or_default();
-                if tcp_targets.contains(&host) {
-                    sender.lock().unwrap().send(host);
-                }
+        for entry in procfs::net::tcp().unwrap().iter() {
+            let ip = entry.remote_address.ip().to_string();
+            let host = self.get_host(ip);
+            if let Some(message) = tcp_targets.get(host) {
+                log::info!("found a tcp target {host}");
+                return Some(message.to_string());
             }
-            thread::sleep(Duration::from_secs(5));
-        });
-        thread.join().unwrap();
+        }
+        None
     }
 }
