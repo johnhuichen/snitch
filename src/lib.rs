@@ -1,19 +1,13 @@
 use confy;
+use core::default::Default;
 use dns_lookup;
 use procfs;
-use std::{default::Default, error::Error, net, thread, time::Duration};
+use serde::{Deserialize, Serialize};
+use std::{error::Error, net, thread, time::Duration};
 
-#[derive(Debug)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 struct Config {
     snitch_target_hosts: Vec<String>,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            snitch_target_hosts: vec![],
-        }
-    }
 }
 
 fn tcp_snitchable() -> bool {
@@ -37,7 +31,7 @@ fn tcp_snitchable() -> bool {
 }
 
 pub fn run() -> Result<(), Box<dyn Error>> {
-    let cfg = confy::load("my-app-name", None)?;
+    let cfg: Config = confy::load("my-app-name", None)?;
     dbg!(cfg);
 
     let thread = thread::spawn(|| {
