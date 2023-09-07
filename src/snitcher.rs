@@ -1,7 +1,15 @@
-use core::default::Default;
 use dns_lookup;
 use procfs;
-use std::{error::Error, net, thread, time::Duration};
+use std::{net, thread, time::Duration};
+
+pub trait Spy {
+    fn new() -> Self;
+    fn spy(&self);
+}
+
+pub trait Snitcher {
+    fn new();
+}
 
 fn tcp_snitchable() -> bool {
     let ignore_ips = ["0.0.0.0", "127.0.0.1"];
