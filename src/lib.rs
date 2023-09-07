@@ -1,10 +1,17 @@
 use std::error::Error;
 
 mod config;
-mod tcp_snitch;
+mod logger;
+mod snitcher;
+mod spy;
 
 pub fn run() -> Result<(), Box<dyn Error>> {
-    let appConfig = config::Config::new();
-    tcp_snitch::run();
+    logger::init()?;
+    log::info!("Starting Snitch App");
+
+    let cfg = config::Config::new()?;
+
+    // snitcher::run();
+
     Ok(())
 }
