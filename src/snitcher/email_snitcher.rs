@@ -5,7 +5,7 @@ pub struct EmailSnitcher {}
 
 impl Snitcher for EmailSnitcher {
     fn snitch(&self, message: String) -> Result<(), Box<dyn Error>> {
-        // send email
+        println!("{message}");
         Ok(())
     }
 }

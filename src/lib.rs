@@ -24,7 +24,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     let (sender, receiver) = mpsc::channel::<Option<String>>();
 
     let handler = thread::spawn(move || loop {
-        if let Some(message) = receiver.recv().expect("receiver thread panicked") {
+        if let Some(message) = receiver.recv().unwrap() {
             email_snitcher.snitch(message).unwrap();
         }
     });
