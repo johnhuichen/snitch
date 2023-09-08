@@ -1,5 +1,7 @@
-use std::sync::{mpsc, Arc, Mutex};
+use std::error::Error;
+
+pub mod email_snitcher;
 
 pub trait Snitcher {
-    fn get_sender(&self) -> Arc<Mutex<mpsc::Sender<String>>>;
+    fn snitch(&self, message: String) -> Result<(), Box<dyn Error>>;
 }
