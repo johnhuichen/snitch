@@ -16,9 +16,9 @@ impl TCPSpy {
         }
     }
 
-    pub fn get_host(&mut self, ip: String) -> &str {
+    fn get_host(&mut self, ip: String) -> &str {
         self.host_map.entry(ip.to_string()).or_insert_with(|| {
-            let ip_addr: IpAddr = ip.parse().unwrap();
+            let ip_addr: IpAddr = ip.parse().expect("Panic when parsing ip {ip}");
             dns_lookup::lookup_addr(&ip_addr).unwrap_or_default()
         })
     }
@@ -27,7 +27,10 @@ impl TCPSpy {
 impl Spy for TCPSpy {
     fn get_message(&mut self) -> Option<String> {
         let tcp_targets = self.tcp_targets.clone();
-        for entry in procfs::net::tcp().unwrap().iter() {
+        for entry in procfs::net::tcp()
+            .expect("Panic when getting tcp connections")
+            .iter()
+        {
             let ip = entry.remote_address.ip().to_string();
             let host = self.get_host(ip);
             if let Some(message) = tcp_targets.get(host) {
