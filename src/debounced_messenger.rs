@@ -1,6 +1,6 @@
 use std::time::{Duration, SystemTime};
 
-const WAIT_IN_SECS: Duration = Duration::from_secs(60);
+const WAIT_IN_SECS: Duration = Duration::from_secs(100);
 
 pub struct DebouncedMessenger {
     start_time: Option<SystemTime>,
@@ -28,7 +28,7 @@ impl DebouncedMessenger {
                 .unwrap()
                 .elapsed()
                 .expect("System time error")
-                > WAIT_IN_SECS
+                >= WAIT_IN_SECS
             {
                 log::info!("Confirm session start");
                 self.start_time = self.marker_time.to_owned();
@@ -62,7 +62,7 @@ impl DebouncedMessenger {
                 .unwrap()
                 .elapsed()
                 .expect("System time error")
-                > WAIT_IN_SECS
+                >= WAIT_IN_SECS
             {
                 log::info!(
                     "Confirm session stop, duration: {:?}",

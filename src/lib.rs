@@ -16,7 +16,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
     let cfg = Config::new()?;
     let spies: Spies = vec![Box::new(TCPSpy::new(cfg.get_tcp_targets()))];
-    let snitchers: Snitchers = vec![Box::new(EmailSnitcher {})];
+    let snitchers: Snitchers = vec![Box::new(EmailSnitcher::new(cfg.get_smtp_info()))];
 
     JobDelegator::run(spies, snitchers)
 }
