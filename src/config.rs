@@ -54,6 +54,10 @@ impl Config {
         self.tcp_targets.clone()
     }
 
+    pub fn get_proc_targets(&self) -> HashMap<String, String> {
+        self.proc_targets.clone()
+    }
+
     pub fn get_smtp_info(&self) -> SMTPInfo {
         self.smtp_info.clone()
     }

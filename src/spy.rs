@@ -1,3 +1,4 @@
+pub mod process_spy;
 pub mod tcp_spy;
 
 pub trait Spy {
