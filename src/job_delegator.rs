@@ -1,7 +1,7 @@
 use crate::snitcher::Snitcher;
 use crate::spy::Spy;
 use std::error::Error;
-use std::sync::mpsc::{self, Sender};
+use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 
@@ -24,21 +24,17 @@ impl JobDelegator {
         });
 
         thread::spawn(move || loop {
-            Self::handle_message(&mut spies, &sender);
+            for spy in spies.iter_mut() {
+                if let Some(message) = spy.get_message() {
+                    sender.send(message).expect("Panic when sending {message}");
+                }
+            }
+
+            thread::sleep(SLEEP_INTERVAL);
         });
 
         handler.join().expect("Panic in receiver thread join");
 
         Ok(())
-    }
-
-    fn handle_message(spies: &mut Spies, sender: &Sender<String>) {
-        for spy in spies.iter_mut() {
-            if let Some(message) = spy.get_message() {
-                sender.send(message).expect("Panic when sending {message}");
-            }
-        }
-
-        thread::sleep(SLEEP_INTERVAL);
     }
 }

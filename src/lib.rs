@@ -5,6 +5,7 @@ use spy::tcp_spy::TCPSpy;
 use std::error::Error;
 
 mod config;
+mod debounced_messenger;
 mod job_delegator;
 mod logger;
 mod snitcher;
