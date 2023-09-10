@@ -35,8 +35,8 @@ impl ::std::default::Default for Config {
                 String::from("John is being lazy and watching Youtube"),
             )]),
             proc_targets: HashMap::from([(
-                String::from("some_process"),
-                String::from("John is being lazy and playing some_process"),
+                String::from("lutris"),
+                String::from("John is being lazy and playing lutris"),
             )]),
         }
     }
