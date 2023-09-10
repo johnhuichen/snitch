@@ -2,7 +2,8 @@ use crate::debounced_messenger::DebouncedMessenger;
 
 use super::Spy;
 use dns_lookup;
-use std::{collections::HashMap, net::IpAddr, time::Duration};
+use log::debug;
+use std::{collections::HashMap, net::IpAddr};
 
 pub struct TCPSpy {
     host_map: HashMap<String, String>,
@@ -14,7 +15,7 @@ impl TCPSpy {
     pub fn new(tcp_targets: HashMap<String, String>) -> Self {
         TCPSpy {
             host_map: HashMap::new(),
-            debounced_messenger: DebouncedMessenger::new(Duration::from_secs(300)),
+            debounced_messenger: DebouncedMessenger::new(),
             tcp_targets,
         }
     }
@@ -32,7 +33,7 @@ impl TCPSpy {
             let ip = entry.remote_address.ip().to_string();
             let host = self.get_host(ip);
             if let Some(message) = tcp_targets.get(host) {
-                log::info!("found a tcp target {host}");
+                debug!("found a tcp target {host}");
                 return Some(message.to_string());
             }
         }
