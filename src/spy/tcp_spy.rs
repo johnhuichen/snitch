@@ -29,6 +29,7 @@ impl TCPSpy {
 
     fn do_get_message(&mut self) -> Option<String> {
         let tcp_targets = self.tcp_targets.clone();
+
         for entry in procfs::net::tcp().unwrap().iter() {
             let ip = entry.remote_address.ip().to_string();
             let host = self.get_host(ip);

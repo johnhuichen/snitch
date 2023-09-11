@@ -41,14 +41,20 @@ impl DebouncedMessenger {
         }
 
         if maybe_message.is_some() && self.start_time.is_some() {
-            log::debug!("In session; make sure marker time is reset");
-            self.marker_time = None;
+            log::debug!("In session");
+            if self.marker_time.is_some() {
+                log::info!("Session did not stop");
+                self.marker_time = None;
+            }
             return None;
         }
 
         if maybe_message.is_none() && self.start_time.is_none() {
-            log::debug!("Not in session; make sure marker time is reset");
-            self.marker_time = None;
+            log::debug!("Not in session");
+            if self.marker_time.is_some() {
+                log::info!("Session did not start");
+                self.marker_time = None;
+            }
             return None;
         }
 
