@@ -2,7 +2,7 @@ use crate::debounced_messenger::DebouncedMessenger;
 
 use super::Spy;
 use dns_lookup;
-use log::debug;
+use log::{debug, info};
 use std::{collections::HashMap, net::IpAddr};
 
 pub struct TCPSpy {
@@ -33,6 +33,7 @@ impl TCPSpy {
             let ip = entry.remote_address.ip().to_string();
             let host = self.get_host(ip);
             if let Some(message) = tcp_targets.get(host) {
+                info!("{:?}", entry);
                 debug!("found a tcp target {host}");
                 return Some(message.to_string());
             }
