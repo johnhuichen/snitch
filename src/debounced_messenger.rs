@@ -1,6 +1,6 @@
 use std::time::{Duration, SystemTime};
 
-const WAIT_IN_SECS: Duration = Duration::from_secs(60 * 30);
+const WAIT_IN_SECS: Duration = Duration::from_secs(60 * 5);
 
 pub struct DebouncedMessenger {
     start_time: Option<SystemTime>,
