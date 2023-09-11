@@ -1,7 +1,5 @@
 use std::time::{Duration, SystemTime};
 
-use log::debug;
-
 const WAIT_IN_SECS: Duration = Duration::from_secs(60 * 30);
 
 pub struct DebouncedMessenger {
