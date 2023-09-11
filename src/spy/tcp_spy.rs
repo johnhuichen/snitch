@@ -2,7 +2,7 @@ use crate::debounced_messenger::DebouncedMessenger;
 
 use super::Spy;
 use dns_lookup;
-use log::{debug, info};
+use procfs::net::TcpState;
 use std::{collections::HashMap, net::IpAddr};
 
 pub struct TCPSpy {
@@ -32,9 +32,8 @@ impl TCPSpy {
         for entry in procfs::net::tcp().unwrap().iter() {
             let ip = entry.remote_address.ip().to_string();
             let host = self.get_host(ip);
-            if let Some(message) = tcp_targets.get(host) {
-                info!("{:?}", entry);
-                debug!("found a tcp target {host}");
+            if tcp_targets.contains_key(host) && entry.state == TcpState::Established {
+                let message = tcp_targets.get(host).unwrap();
                 return Some(message.to_string());
             }
         }

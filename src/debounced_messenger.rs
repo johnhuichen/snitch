@@ -1,6 +1,8 @@
 use std::time::{Duration, SystemTime};
 
-const WAIT_IN_SECS: Duration = Duration::from_secs(600);
+use log::debug;
+
+const WAIT_IN_SECS: Duration = Duration::from_secs(60 * 30);
 
 pub struct DebouncedMessenger {
     start_time: Option<SystemTime>,
@@ -41,12 +43,14 @@ impl DebouncedMessenger {
         }
 
         if maybe_message.is_some() && self.start_time.is_some() {
-            log::debug!("In session");
+            log::debug!("In session; make sure marker time is reset");
+            self.marker_time = None;
             return None;
         }
 
         if maybe_message.is_none() && self.start_time.is_none() {
-            log::debug!("Nothing happened");
+            log::debug!("Not in session; make sure marker time is reset");
+            self.marker_time = None;
             return None;
         }
 
