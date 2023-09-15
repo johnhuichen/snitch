@@ -20,6 +20,8 @@ impl DebouncedMessenger {
             if self.marker_time.is_none() {
                 log::info!("Mark potential session start");
                 self.marker_time = Some(SystemTime::now());
+
+                self.log_state();
                 return None;
             }
 
@@ -33,10 +35,13 @@ impl DebouncedMessenger {
                 log::info!("Confirm session start");
                 self.start_time = self.marker_time.to_owned();
                 self.marker_time = None;
+
+                self.log_state();
                 return maybe_message;
             }
 
             log::debug!("Waiting to confirm session start");
+
             return None;
         }
 
@@ -46,6 +51,7 @@ impl DebouncedMessenger {
                 log::info!("Session did not stop");
                 self.marker_time = None;
             }
+
             return None;
         }
 
@@ -55,6 +61,7 @@ impl DebouncedMessenger {
                 log::info!("Session did not start");
                 self.marker_time = None;
             }
+
             return None;
         }
 
@@ -62,6 +69,8 @@ impl DebouncedMessenger {
             if self.marker_time.is_none() {
                 log::info!("Mark potential session stop");
                 self.marker_time = Some(SystemTime::now());
+
+                self.log_state();
                 return None;
             }
 
@@ -81,13 +90,24 @@ impl DebouncedMessenger {
                 );
                 self.start_time = None;
                 self.marker_time = None;
+
+                self.log_state();
                 return None;
             }
 
             log::debug!("Waiting to confirm session stop");
+
             return None;
         }
 
         None
+    }
+
+    fn log_state(&self) {
+        log::info!(
+            "start_time={:?}, marker_time={:?}",
+            self.start_time,
+            self.marker_time
+        );
     }
 }

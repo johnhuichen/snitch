@@ -32,6 +32,6 @@ impl Spy for ProcessSpy {
             }
         }
 
-        None
+        self.debounced_messenger.debounce_message(None)
     }
 }
