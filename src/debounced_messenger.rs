@@ -92,7 +92,8 @@ impl DebouncedMessenger {
                 self.marker_time = None;
 
                 self.log_state();
-                return None;
+
+                return Some("Previous session stopped".into());
             }
 
             log::debug!("Waiting to confirm session stop");
