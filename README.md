@@ -20,7 +20,7 @@ email_subject = 'Create your own email subject'
 "www.youtube.com" = "John is being lazy and watching Youtube"
 
 [proc_targets]
-"lutris" = 'John is being lazy and playing lutris'
+"foobar" = 'John is being lazy and playing foobar'
 ```
 
 ## Update SMTP Info
@@ -49,8 +49,8 @@ To add more proc_targets, simply follow the example and add more entries under [
 
 ```
 [proc_targets]
-"lutris" = 'John is being lazy and playing lutris'
-"foobar" = 'John is being lazy and playing foobar'
+"foo" = 'John is being lazy and playing foo'
+"bar" = 'John is being lazy and playing bar'
 ```
 
 ## Run snitch on startup (Linux)
