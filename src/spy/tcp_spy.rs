@@ -6,35 +6,37 @@ use procfs::net::TcpState;
 use std::{collections::HashMap, net::IpAddr};
 
 pub struct TCPSpy {
-    host_map: HashMap<String, String>,
-    tcp_targets: HashMap<String, String>,
+    tcp_targets: HashMap<IpAddr, String>,
     debounced_messenger: DebouncedMessenger,
 }
 
 impl TCPSpy {
     pub fn new(tcp_targets: HashMap<String, String>) -> Self {
+        let tcp_targets: HashMap<IpAddr, String> =
+            tcp_targets.iter().flat_map(TCPSpy::host_to_ip).collect();
         TCPSpy {
-            host_map: HashMap::new(),
             debounced_messenger: DebouncedMessenger::new(),
             tcp_targets,
         }
     }
 
-    fn get_host(&mut self, ip: String) -> &str {
-        self.host_map.entry(ip.to_string()).or_insert_with(|| {
-            let ip_addr: IpAddr = ip.parse().expect("Panic when parsing ip {ip}");
-            dns_lookup::lookup_addr(&ip_addr).unwrap_or_default()
-        })
+    fn host_to_ip((host, message): (&String, &String)) -> Vec<(IpAddr, String)> {
+        match dns_lookup::lookup_host(host) {
+            Ok(ips) => ips
+                .into_iter()
+                .map(|ip: IpAddr| (ip, message.to_string()))
+                .collect(),
+            Err(_) => Vec::new(),
+        }
     }
 
     fn do_get_message(&mut self) -> Option<String> {
         let tcp_targets = self.tcp_targets.clone();
 
         for entry in procfs::net::tcp().unwrap().iter() {
-            let ip = entry.remote_address.ip().to_string();
-            let host = self.get_host(ip);
-            if tcp_targets.contains_key(host) && entry.state == TcpState::Established {
-                let message = tcp_targets.get(host).unwrap();
+            let ip = entry.remote_address.ip();
+            if tcp_targets.contains_key(&ip) && entry.state == TcpState::Established {
+                let message = tcp_targets.get(&ip).unwrap();
                 return Some(message.to_string());
             }
         }

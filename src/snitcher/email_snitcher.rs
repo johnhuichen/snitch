@@ -20,14 +20,8 @@ impl EmailSnitcher {
 impl Snitcher for EmailSnitcher {
     fn snitch(&self, message: String) -> Result<(), Box<dyn Error>> {
         let email = Message::builder()
-            .from(
-                format!("Sender <{}>", self.smtp_info.smtp_user)
-                    .parse()
-                    .unwrap(),
-            )
-            .to(format!("Receiver <{}>", self.smtp_info.recipient)
-                .parse()
-                .unwrap())
+            .from(format!("<{}>", self.smtp_info.smtp_user).parse().unwrap())
+            .to(format!("<{}>", self.smtp_info.recipient).parse().unwrap())
             .subject(self.smtp_info.email_subject.to_owned())
             .body(message)
             .unwrap();

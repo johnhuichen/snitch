@@ -8,3 +8,6 @@ log
 
 # ctags
 tags
+
+# git
+.git
