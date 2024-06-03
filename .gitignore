@@ -1,0 +1,13 @@
+/target
+
+# Vim
+*.swp
+
+# Log
+log
+
+# ctags
+tags
+
+# git
+.git
