@@ -1,10 +1,8 @@
 use config::Config;
 use job_delegator::{JobDelegator, Snitchers, Spies};
 use snitcher::email_snitcher::EmailSnitcher;
-use spy::tcp_spy::TCPSpy;
+use spy::{process_spy::ProcessSpy, tcp_spy::TCPSpy};
 use std::error::Error;
-
-use self::spy::process_spy::ProcessSpy;
 
 mod config;
 mod debounced_messenger;

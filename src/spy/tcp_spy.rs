@@ -16,7 +16,8 @@ pub struct TCPSpy {
 impl TCPSpy {
     pub fn new(host_targets: HashMap<String, String>) -> Self {
         // wait till network is up
-        match retry(Exponential::from_millis(1000), || {
+        match retry(Exponential::from_millis(5000), || {
+            log::info!("Waiting for network...");
             dns_lookup::lookup_host("google.com")
         }) {
             Ok(_) => log::info!("Network is up"),
@@ -34,7 +35,7 @@ impl TCPSpy {
     }
 
     fn host_to_ip((host, message): (&String, &String)) -> Vec<(String, String)> {
-        match retry(Exponential::from_millis(100).take(3), || {
+        match retry(Exponential::from_millis(1000).take(3), || {
             dns_lookup::lookup_host(host)
         }) {
             Ok(ips) => ips
