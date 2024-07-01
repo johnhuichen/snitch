@@ -1,11 +1,10 @@
-use crate::debounced_messenger::DebouncedMessenger;
-
-use super::Spy;
 use dns_lookup;
 use procfs::net::TcpState;
 use retry::delay::Exponential;
 use retry::retry;
 use std::{collections::HashMap, net::IpAddr};
+
+use crate::{debounced_messenger::DebouncedMessenger, spy::Spy};
 
 pub struct TCPSpy {
     host_map: HashMap<String, String>,

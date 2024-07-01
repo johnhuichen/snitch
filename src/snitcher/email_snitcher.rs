@@ -1,10 +1,8 @@
-use lettre::transport::smtp::authentication::Credentials;
-use lettre::{Message, SmtpTransport, Transport};
+use lettre::{transport::smtp::authentication::Credentials, Message, SmtpTransport, Transport};
 use log::info;
 
-use crate::config::SMTPInfo;
+use crate::{config::SMTPInfo, snitcher::Snitcher};
 
-use super::Snitcher;
 use std::error::Error;
 
 pub struct EmailSnitcher {

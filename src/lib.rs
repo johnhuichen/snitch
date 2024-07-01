@@ -1,7 +1,9 @@
-use config::Config;
-use job_delegator::{JobDelegator, Snitchers, Spies};
-use snitcher::email_snitcher::EmailSnitcher;
-use spy::{process_spy::ProcessSpy, tcp_spy::TCPSpy};
+use crate::{
+    config::Config,
+    job_delegator::{JobDelegator, Snitchers, Spies},
+    snitcher::email_snitcher::EmailSnitcher,
+    spy::{process_spy::ProcessSpy, tcp_spy::TCPSpy},
+};
 use std::error::Error;
 
 mod config;

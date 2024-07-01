@@ -1,9 +1,5 @@
-use crate::snitcher::Snitcher;
-use crate::spy::Spy;
-use std::error::Error;
-use std::sync::mpsc;
-use std::thread;
-use std::time::Duration;
+use crate::{snitcher::Snitcher, spy::Spy};
+use std::{error::Error, sync::mpsc, thread, time::Duration};
 
 // TODO: move to config file under project root
 const SLEEP_INTERVAL: Duration = Duration::from_secs(60);
