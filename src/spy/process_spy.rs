@@ -24,7 +24,7 @@ impl Spy for ProcessSpy {
     fn get_message(&mut self) -> Option<String> {
         let sys = System::new_all();
 
-        for (_, process) in sys.processes() {
+        for process in sys.processes().values() {
             if let Some(message) = self.proc_targets.get(process.name()) {
                 return self
                     .debounced_messenger

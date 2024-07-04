@@ -15,10 +15,11 @@ pub struct TCPSpy {
 impl TCPSpy {
     pub fn new(host_targets: HashMap<String, String>) -> Self {
         // wait till network is up
-        match retry(Exponential::from_millis(5000), || {
+        let operation = || {
             log::info!("Waiting for network...");
             dns_lookup::lookup_host("google.com")
-        }) {
+        };
+        match retry(Exponential::from_millis(5000), operation) {
             Ok(_) => log::info!("Network is up"),
             Err(_) => log::error!("Network is down"),
         }
@@ -61,11 +62,8 @@ impl TCPSpy {
         for entry in procfs::net::tcp().unwrap().iter() {
             let ip = entry.remote_address.ip().to_string();
 
-            if tcp_targets.contains_key(&ip) && entry.state == TcpState::Established {
-                let message = tcp_targets.get(&ip).unwrap();
-                return Some(message.to_string());
-            } else if tcp_targets.contains_key(self.get_host(&ip))
-                && entry.state == TcpState::Established
+            if entry.state == TcpState::Established
+                && (tcp_targets.contains_key(self.get_host(&ip)) || tcp_targets.contains_key(&ip))
             {
                 let message = tcp_targets.get(&ip).unwrap();
                 return Some(message.to_string());

@@ -34,7 +34,7 @@ impl DebouncedMessenger {
                 >= WAIT_IN_SECS
             {
                 log::info!("Confirm session start");
-                self.start_time = self.marker_time.to_owned();
+                self.marker_time.clone_into(&mut self.start_time);
                 self.marker_time = None;
 
                 self.log_state();
